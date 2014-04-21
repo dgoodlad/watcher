@@ -7,7 +7,7 @@ module Watcher
   end
 
   def self.access_token
-    keychain = Boxen::Keychain.new('dgoodlad')
+    keychain = Boxen::Keychain.new(ENV['USER'])
     keychain.token
   end
 
@@ -16,6 +16,14 @@ module Watcher
       slug = "#{org}/#{r.name}"
       puts "Watching #{slug}"
       client.update_subscription(slug, :subscribed => true)
+    end
+  end
+
+  def self.unwatch_all_from_org(org)
+    client.org_repos(org).each do |r|
+      slug = "#{org}/#{r.name}"
+      puts "Watching #{slug}"
+      client.update_subscription(slug, :subscribed => false)
     end
   end
 end
